@@ -1,0 +1,38 @@
+@TaskManagement_Api_HostAddress = http://localhost:5180
+
+### Signup
+POST {{TaskManagement_Api_HostAddress}}/api/auth/Signup
+Content-Type: application/json
+
+{
+  "username": "user1",
+  "email": "user1@example.com",
+  "password": "Password123!"
+}
+
+### Login
+POST {{TaskManagement_Api_HostAddress}}/api/auth/Login
+Content-Type: application/json
+
+{
+  "email": "user1@example.com",
+  "password": "Password123!"
+}
+
+### Get tasks
+# Replace TOKEN with the JWT returned by Login.
+GET {{TaskManagement_Api_HostAddress}}/api/tasks/GetByCriteria
+Authorization: Bearer TOKEN
+
+### Add task
+POST {{TaskManagement_Api_HostAddress}}/api/tasks/Add
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{
+  "title": "Prepare assignment",
+  "description": "Complete the Task Management API.",
+  "fromDate": "2026-08-21T09:00:00",
+  "toDate": "2026-08-25T18:00:00",
+  "statusId": 2
+}

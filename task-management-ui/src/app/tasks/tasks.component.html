@@ -1,0 +1,108 @@
+<main class="page">
+  <header class="topbar">
+    <div class="brand-small"><span class="check">✓</span><span>Task Management</span></div>
+    <button class="logout" type="button" (click)="logout()">Logout</button>
+  </header>
+
+  <section class="content">
+    <div class="heading-row">
+      <div>
+        <h1>My Tasks</h1>
+        <p>View and manage the tasks assigned to your account.</p>
+      </div>
+      <button class="add-btn" type="button" (click)="openAdd()">+ Add Task</button>
+    </div>
+
+    <div *ngIf="error" class="alert error">{{ error }}</div>
+    <div *ngIf="message" class="alert success">{{ message }}</div>
+
+    <section class="filters">
+      <div class="field search-field">
+        <label>Search by title</label>
+        <input [(ngModel)]="searchTitle" (keyup.enter)="loadTasks()" placeholder="Search tasks..." />
+      </div>
+      <div class="field">
+        <label>Status</label>
+        <select [(ngModel)]="filterStatus" (change)="loadTasks()">
+          <option [ngValue]="0">All statuses</option>
+          <option *ngFor="let status of statuses" [ngValue]="status.id">{{ status.name }}</option>
+        </select>
+      </div>
+      <button class="filter-btn" type="button" (click)="loadTasks()">Search</button>
+    </section>
+
+    <div *ngIf="loading" class="empty">Loading your tasks...</div>
+    <div *ngIf="!loading && tasks.length === 0" class="empty">
+      <div class="empty-icon">✓</div>
+      <h2>No tasks found</h2>
+      <p>Add your first task or change the filters.</p>
+    </div>
+
+    <section *ngIf="!loading && tasks.length" class="task-list">
+      <article class="task-card" *ngFor="let task of tasks">
+        <div class="task-main">
+          <div class="task-title-row">
+            <h2>{{ task.title }}</h2>
+            <span class="status" [ngClass]="statusClass(task.statusId)">{{ task.status }}</span>
+          </div>
+          <p class="description">{{ task.description || 'No description provided.' }}</p>
+          <div class="dates">
+            <span><strong>From:</strong> {{ task.fromDate | date:'MMM d, y, h:mm a' }}</span>
+            <span><strong>Due:</strong> {{ task.toDate | date:'MMM d, y, h:mm a' }}</span>
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" class="edit" (click)="openEdit(task)">Edit</button>
+          <button type="button" class="delete" [disabled]="deletingId === task.id" (click)="deleteTask(task)">
+            {{ deletingId === task.id ? 'Deleting...' : 'Delete' }}
+          </button>
+        </div>
+      </article>
+    </section>
+  </section>
+
+  <div *ngIf="showForm" class="modal-backdrop" (click)="closeForm()">
+    <section class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <h2>{{ editing ? 'Edit Task' : 'Add Task' }}</h2>
+          <p>{{ editing ? 'Update the details of your task.' : 'Create a new task for your account.' }}</p>
+        </div>
+        <button class="close" type="button" (click)="closeForm()">×</button>
+      </div>
+
+      <div *ngIf="error" class="alert error">{{ error }}</div>
+
+      <form (ngSubmit)="saveTask()" #taskForm="ngForm">
+        <label>Title</label>
+        <input name="title" [(ngModel)]="form.title" maxlength="200" required placeholder="Task title" />
+
+        <label>Description</label>
+        <textarea name="description" [(ngModel)]="form.description" rows="3" placeholder="Task details (optional)"></textarea>
+
+        <div class="two-col">
+          <div>
+            <label>From date</label>
+            <input type="datetime-local" name="fromDate" [(ngModel)]="form.fromDate" required />
+          </div>
+          <div>
+            <label>To date</label>
+            <input type="datetime-local" name="toDate" [(ngModel)]="form.toDate" required />
+          </div>
+        </div>
+
+        <label>Status</label>
+        <select name="statusId" [(ngModel)]="form.statusId" required>
+          <option *ngFor="let status of statuses" [ngValue]="status.id">{{ status.name }}</option>
+        </select>
+
+        <div class="modal-actions">
+          <button type="button" class="cancel" (click)="closeForm()">Cancel</button>
+          <button type="submit" class="save" [disabled]="saving || taskForm.invalid">
+            {{ saving ? 'Saving...' : (editing ? 'Save Changes' : 'Add Task') }}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+</main>

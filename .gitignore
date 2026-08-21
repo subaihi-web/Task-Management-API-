@@ -1,0 +1,35 @@
+# Build output
+**/bin/
+**/obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# Local database
+*.db
+*.db-shm
+*.db-wal
+
+# Test results
+TestResults/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment / secrets
+.env
+appsettings.Local.json
+
+# Angular
+task-management-ui/node_modules/
+task-management-ui/dist/
+task-management-ui/.angular/

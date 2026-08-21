@@ -1,0 +1,49 @@
+<main class="auth-page">
+  <section class="auth-card">
+    <div class="brand">
+      <div class="brand-icon">✓</div>
+      <div>
+        <h1>Task Management</h1>
+        <p>Organize your work, one task at a time.</p>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button type="button" [class.active]="mode === 'login'" (click)="switchMode('login')">Login</button>
+      <button type="button" [class.active]="mode === 'signup'" (click)="switchMode('signup')">Sign Up</button>
+    </div>
+
+    <div *ngIf="error" class="alert error">{{ error }}</div>
+    <div *ngIf="success" class="alert success">{{ success }}</div>
+
+    <form *ngIf="mode === 'login'" (ngSubmit)="submit()" #loginForm="ngForm">
+      <label>Email</label>
+      <input type="email" name="email" [(ngModel)]="login.email" placeholder="you@example.com" required />
+
+      <label>Password</label>
+      <input type="password" name="password" [(ngModel)]="login.password" placeholder="Enter your password" required />
+
+      <button class="primary" type="submit" [disabled]="loading || loginForm.invalid">
+        {{ loading ? 'Signing in...' : 'Login' }}
+      </button>
+    </form>
+
+    <form *ngIf="mode === 'signup'" (ngSubmit)="submit()" #signupForm="ngForm">
+      <label>Username</label>
+      <input name="username" [(ngModel)]="signup.username" placeholder="Choose a username" minlength="3" required />
+
+      <label>Email</label>
+      <input type="email" name="email" [(ngModel)]="signup.email" placeholder="you@example.com" required />
+
+      <label>Password</label>
+      <input type="password" name="password" [(ngModel)]="signup.password" placeholder="At least 6 characters" minlength="6" required />
+
+      <label>Confirm Password</label>
+      <input type="password" name="confirmPassword" [(ngModel)]="signup.confirmPassword" placeholder="Repeat your password" required />
+
+      <button class="primary" type="submit" [disabled]="loading || signupForm.invalid">
+        {{ loading ? 'Creating account...' : 'Create Account' }}
+      </button>
+    </form>
+  </section>
+</main>
